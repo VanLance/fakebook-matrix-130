@@ -20,3 +20,7 @@ class UpdateUserSchema(Schema):
   new_password = fields.Str()
   first_name = fields.Str()
   last_name = fields.Str()
+
+class DeleteUserSchema(Schema):
+  username = fields.Str(required = True)
+  password = fields.Str(required = True)

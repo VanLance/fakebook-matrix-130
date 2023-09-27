@@ -1,12 +1,10 @@
-from flask import request
 from flask.views import MethodView
 from flask_smorest import abort
 from sqlalchemy.exc import IntegrityError
-from schemas import PostSchema, UpdateUserSchema, UserSchema, DeleteUserSchema
+
+from schemas import PostSchema, UpdateUserSchema, UserSchema, DeleteUserSchema, UserSchemaNested
 from . import bp
 from .models import UserModel
-
-from db import users, posts
 
 @bp.route('/user')
 class UserList(MethodView):  
@@ -38,7 +36,7 @@ class UserList(MethodView):
 @bp.route('/user/<user_id>')
 class User(MethodView):
 
-  @bp.response(200, UserSchema)
+  @bp.response(200, UserSchemaNested)
   def get(self, user_id):
     user = UserModel.query.get_or_404(user_id, description='User Not Found')
     return user
@@ -56,18 +54,22 @@ class User(MethodView):
         abort(400, message='Username or Email already Taken')
 
 
-@bp.get('/user/<user_id>/post')
-@bp.response(200, PostSchema(many=True))
-def get_user_posts(user_id):
-  if user_id not in users:
-    abort(404, message='user not found')
-  user_posts = [post for post in posts.values() if post['user_id'] == user_id]
-  return user_posts, 200
-
 @bp.route('/user/follow/<follower_id>/<followed_id>')
 class FollowUser(MethodView):
-  def post(follower_id, followed_id):
-    pass
+  
+  @bp.response(200, UserSchema(many=True))
+  def post(self, follower_id, followed_id):
+    user = UserModel.query.get(follower_id)
+    user_to_follow = UserModel.query.get(followed_id)
+    if user and user_to_follow:
+      user.follow_user(user_to_follow)
+      return user.followed.all()
+    abort(400, message='Invalid user info')
 
-  def put(follower_id, followed_id):
-    pass
+  def put(self, follower_id, followed_id):
+    user = UserModel.query.get(follower_id)
+    user_to_unfollow = UserModel.query.get(followed_id)
+    if user and user_to_unfollow:
+      user.unfollow_user(user_to_unfollow)
+      return {'message': f'User: {user_to_unfollow.username} unfollowed'}, 202
+    abort(400, message='Invalid user info')  

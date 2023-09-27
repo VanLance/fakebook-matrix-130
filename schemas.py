@@ -1,5 +1,11 @@
 from marshmallow import Schema, fields
 
+class PostSchema(Schema):
+  id = fields.Str(dump_only = True)
+  body = fields.Str(required = True)
+  user_id = fields.Int(required = True)
+  timestamp = fields.Str(dump_only=True)
+
 class UserSchema(Schema):
   id = fields.Str(dump_only = True)
   username = fields.Str(required = True)
@@ -7,13 +13,10 @@ class UserSchema(Schema):
   password = fields.Str(required = True, load_only = True)
   first_name = fields.Str()
   last_name = fields.Str()
-
-class PostSchema(Schema):
-  id = fields.Str(dump_only = True)
-  body = fields.Str(required = True)
-  user_id = fields.Int(required = True)
-  timestamp = fields.Str(dump_only=True)
-  # user = fields.List(fields.Nested(UserSchema()), dumps_only = True)
+  
+class UserSchemaNested(UserSchema):
+  posts = fields.List(fields.Nested(PostSchema), dump_only=True)
+  followed = fields.List(fields.Nested(UserSchema), dump_only=True)
 
 class UpdateUserSchema(Schema):
   username = fields.Str()

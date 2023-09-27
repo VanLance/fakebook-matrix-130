@@ -53,4 +53,16 @@ class UserModel(db.Model):
   def delete(self):
     db.session.delete(self)
     db.session.commit()
+
+  def is_following(self, user):
+    return self.followed.filter(user.id == followers.c.followed_id).count() > 0
   
+  def follow_user(self, user):
+    if not self.is_following(user):
+      self.followed.append(user)
+      self.save()
+
+  def unfollow_user(self, user):
+    if self.is_following(user):
+      self.followed.remove(user)
+      self.save()

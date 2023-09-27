@@ -20,3 +20,4 @@ from resources.users import routes
 from resources.posts import routes
 
 from resources.users.UserModel import UserModel
+from resources.posts.PostModel import PostModel

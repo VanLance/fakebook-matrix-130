@@ -12,9 +12,10 @@ class UserModel(db.Model):
   password_hash = db.Column(db.String, nullable = False)
   first_name = db.Column(db.String)
   last_name = db.Column(db.String)
+  posts = db.relationship('PostModel', backref='author', lazy='dynamic', cascade='all, delete')
 
   def __repr__(self):
-    return f'<User: {self.username}'
+    return f'<User: {self.username}>'
   
   def hash_password(self, password):
     self.password_hash = generate_password_hash(password)

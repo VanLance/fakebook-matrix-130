@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import abort
 from sqlalchemy.exc import IntegrityError
 
-from resources.users.UserModel import UserModel
+from resources.users.models import UserModel
 
 from .PostModel import PostModel
 from schemas import PostSchema

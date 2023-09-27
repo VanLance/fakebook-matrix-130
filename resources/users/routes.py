@@ -4,7 +4,7 @@ from flask_smorest import abort
 from sqlalchemy.exc import IntegrityError
 from schemas import PostSchema, UpdateUserSchema, UserSchema, DeleteUserSchema
 from . import bp
-from .UserModel import UserModel
+from .models import UserModel
 
 from db import users, posts
 
@@ -63,3 +63,11 @@ def get_user_posts(user_id):
     abort(404, message='user not found')
   user_posts = [post for post in posts.values() if post['user_id'] == user_id]
   return user_posts, 200
+
+@bp.route('/user/follow/<follower_id>/<followed_id>')
+class FollowUser(MethodView):
+  def post(follower_id, followed_id):
+    pass
+
+  def put(follower_id, followed_id):
+    pass

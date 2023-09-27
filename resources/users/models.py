@@ -2,6 +2,16 @@ from app import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# class FollowersModel(db.Model):
+#   id = db.Column(db.Integer, primary_key = True)
+#   follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
+#   followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
+
+followers = db.Table('followers',
+  db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+  db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))           
+)
+
 class UserModel(db.Model):
 
   __tablename__  = 'users'
@@ -13,6 +23,13 @@ class UserModel(db.Model):
   first_name = db.Column(db.String)
   last_name = db.Column(db.String)
   posts = db.relationship('PostModel', backref='author', lazy='dynamic', cascade='all, delete')
+  followed = db.relationship('UserModel', 
+    secondary=followers, 
+    primaryjoin = followers.c.follower_id == id,
+    secondaryjoin = followers.c.followed_id == id,
+    backref = db.backref('followers', lazy='dynamic'),
+    lazy='dynamic' 
+  )
 
   def __repr__(self):
     return f'<User: {self.username}>'

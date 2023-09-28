@@ -3,8 +3,8 @@ from marshmallow import Schema, fields
 class PostSchema(Schema):
   id = fields.Str(dump_only = True)
   body = fields.Str(required = True)
-  user_id = fields.Int(required = True)
   timestamp = fields.Str(dump_only=True)
+  user_id = fields.Int(dump_only = True)
 
 class UserSchema(Schema):
   id = fields.Str(dump_only = True)
@@ -26,6 +26,7 @@ class UpdateUserSchema(Schema):
   first_name = fields.Str()
   last_name = fields.Str()
 
-class DeleteUserSchema(Schema):
-  username = fields.Str(required = True)
+class AuthUserSchema(Schema):
+  username = fields.Str()
+  email = fields.Str()
   password = fields.Str(required = True, load_only = True)

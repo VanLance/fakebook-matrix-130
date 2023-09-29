@@ -1,0 +1,14 @@
+
+{% extends "base.jinja" %}
+
+{% block content %}
+
+  <p>Instructors</p>
+  <p>{{ instructors[0] }}</p>
+  <p>{{ instructors[1] }}</p>
+  <p>Students</p>
+  {% for student in students %}
+    <p>{{ student }}</p>
+  {% endfor %}
+
+{% endblock content %}

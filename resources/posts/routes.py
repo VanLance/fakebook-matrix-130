@@ -5,7 +5,6 @@ from flask_smorest import abort
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from resources.users.models import UserModel
 
 from .PostModel import PostModel
 from schemas import PostSchema
@@ -31,6 +30,7 @@ class PostList(MethodView):
       return p
     except IntegrityError:
       abort(400, message="Invalid User Id")
+
 
 @bp.route('/<post_id>')
 class Post(MethodView):

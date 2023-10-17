@@ -11,7 +11,7 @@ from .models import UserModel
 @bp.response(201, UserSchema)
 def register(user_data):
   user = UserModel()
-  user.from_dict( user_data)
+  user.from_dict( user_data )
   try:
     user.save()
     return user_data
